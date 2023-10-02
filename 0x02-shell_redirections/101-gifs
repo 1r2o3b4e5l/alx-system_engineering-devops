@@ -1,2 +1,2 @@
 #!/bin/bash
-find -type f -name "*.gif" | rev | cut -d "/" -f 1 | cut -d '.' -f 2- | rev | C_ALL=C sort -f
+find "$PWD" -type f -name "*.gif" | sort -t $'\0' -i -f | sed 's|.*/||' | sed 's|\(.*\)\..*|\1|' | tr '\n' '\0' | xargs -0 -I{} printf "%s\n" {}
