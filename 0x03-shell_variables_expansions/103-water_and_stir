@@ -1,3 +1,2 @@
 #!/bin/bash
-# Add the values of WATER and STIR result=$((WATER + STIR))
-# Print the result echo "The sum of WATER and STIR is: $result"
+echo $(printf %0 $(($((5#$(echo $WATER | tr 'water' '01234'))) + $((5#$(echo $STIR | tr 'stir.' .01234))))) | tr '01234567' 'bestchol')
