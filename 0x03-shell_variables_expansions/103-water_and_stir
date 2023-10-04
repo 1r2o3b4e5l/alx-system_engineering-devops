@@ -1,5 +1,3 @@
 #!/bin/bash
-# Add the values of WATER and STIR
-result=$((WATER + STIR))
-# Print the result
-echo "The sum of WATER and STIR is: $result"
+# Add the values of WATER and STIR result=$((WATER + STIR))
+# Print the result echo "The sum of WATER and STIR is: $result"
