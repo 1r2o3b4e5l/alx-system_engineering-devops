@@ -1,0 +1,2 @@
+scp 0-custom_http_response_header ubuntu@3.90.81.35:~
+ssh ubuntu@3.90.81.35 'bash ~/0-custom_http_response_header'
