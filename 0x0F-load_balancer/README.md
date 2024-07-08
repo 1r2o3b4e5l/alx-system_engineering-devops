@@ -15,4 +15,6 @@ This repository contains a Bash script to configure Nginx with a custom HTTP res
    # For web-02
    scp 0-custom_http_response_header ubuntu@3.90.81.35:~
    ssh ubuntu@3.90.81.35 'bash ~/0-custom_http_response_header'
-
+ # For 1-install_load_balancer
+   scp 1-install_load_balancer ubuntu@54.160.99.195:~
+   ssh ubuntu@54.160.99.195 'bash ~/1-install_load_balancer'
