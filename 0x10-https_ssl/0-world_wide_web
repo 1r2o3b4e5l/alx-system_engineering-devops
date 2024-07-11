@@ -1,35 +1,34 @@
-#!/usr/bin/env bash
-# shellcheck disable=SC2086
-# display information about subdomains
+#!/bin/bash
 
-print_dns_info() {
-	local SUB_DOMAIN="$1"
-	local RECORD_TYPE="$2"
-	local DESTINATION="$3"
+# Function to fetch and display DNS information
+fetch_dns_info() {
+  local domain=$1
+  local subdomain=$2
 
-	echo "The subdomain $SUB_DOMAIN is a $RECORD_TYPE record and points to $DESTINATION"
+  if [ -z "$subdomain" ]; then
+    subdomains=("www" "lb-01" "web-01" "web-02")
+  else
+    subdomains=("$subdomain")
+  fi
+
+  for sub in "${subdomains[@]}"; do
+    result=$(dig "$sub.$domain" +short)
+    if [ -z "$result" ]; then
+      echo "The subdomain $sub does not exist or has no A record."
+    else
+      echo "The subdomain $sub is an A record and points to $result"
+    fi
+  done
 }
-dig_domain() {
-	local SUB_DOMAIN="$1"
-	local DOMAIN="$2"
 
-	dig_ouput=$(dig "$SUB_DOMAIN.$DOMAIN" | grep -A1 "ANSWER SECTION" | tail -n 1)
-	record=$(echo "$dig_ouput" | awk '{print $4}')
-	ip=$(echo "$dig_ouput" | awk '{print $5}')
-	print_dns_info "$SUB_DOMAIN" "$record" "$ip"
-}
-my_array=("www" "lb-01" "web-01" "web-02")
-if [ $# -lt 1 ]; then
-	exit 1
+# Main script
+domain=$1
+subdomain=$2
+
+if [ -z "$domain" ]; then
+  echo "Usage: $0 domain [subdomain]"
+  exit 1
 fi
 
-domain="$1"
-subdomain="$2"
+fetch_dns_info "$domain" "$subdomain"
 
-if [ -z "$subdomain" ]; then
-	for element in "${my_array[@]}"; do
-		dig_domain "$element" "$domain"
-	done
-else
-	dig_domain "$subdomain" "$domain"
-fi
