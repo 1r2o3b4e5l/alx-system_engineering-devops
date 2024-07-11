@@ -39,5 +39,5 @@ backend http_back
     balance roundrobin
     option httpchk GET /
     http-check expect string Holberton School
-    server web-01 54.227.197.236:80 check
-    server web-02 3.90.81.35:80 check
+    server 516749-web-01 54.227.197.236:80 check
+    server 516749-web-02 3.90.81.35:80 check
