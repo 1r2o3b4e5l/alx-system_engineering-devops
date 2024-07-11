@@ -1,34 +1,30 @@
 #!/bin/bash
 
-# Function to fetch and display DNS information
-fetch_dns_info() {
-  local domain=$1
-  local subdomain=$2
-
-  if [ -z "$subdomain" ]; then
-    subdomains=("www" "lb-01" "web-01" "web-02")
-  else
-    subdomains=("$subdomain")
-  fi
-
-  for sub in "${subdomains[@]}"; do
-    result=$(dig "$sub.$domain" +short)
-    if [ -z "$result" ]; then
-      echo "The subdomain $sub does not exist or has no A record."
-    else
-      echo "The subdomain $sub is an A record and points to $result"
-    fi
-  done
+# Function to display information about a subdomain
+display_info() {
+    domain=$1
+    subdomain=$2
+    dig_output=$(dig $subdomain.$domain | grep -A1 'ANSWER SECTION:')
+    record_type=$(echo "$dig_output" | awk '{print $4}')
+    destination=$(echo "$dig_output" | awk '{print $5}')
+    echo "The subdomain $subdomain is a $record_type record and points to $destination"
 }
 
 # Main script
-domain=$1
-subdomain=$2
-
-if [ -z "$domain" ]; then
-  echo "Usage: $0 domain [subdomain]"
-  exit 1
+if [ $# -lt 1 ]; then
+    echo "Usage: $0 domain [subdomain]"
+    exit 1
 fi
 
-fetch_dns_info "$domain" "$subdomain"
+domain=$1
+
+if [ $# -eq 1 ]; then
+    display_info $domain www
+    display_info $domain lb-01
+    display_info $domain web-01
+    display_info $domain web-02
+else
+    subdomain=$2
+    display_info $domain $subdomain
+fi
 
